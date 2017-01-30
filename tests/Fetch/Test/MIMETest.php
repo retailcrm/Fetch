@@ -34,6 +34,10 @@ class MIMETest extends \PHPUnit_Framework_TestCase
                 . PHP_EOL .
                 '=?ISO-8859-2?B?dSB1bmRlcnN0YW5kIHRoZSBleGFtcGxlLg==?='
             ),
+            array(
+                '?????? ?????.pdf',
+                '=?UTF-8?B?' .base64_encode("\xCF\xF0\xE8\xEC\xE5\xF0 \xEF\xEB\xE0\xED\xE0\x2E\x70\x64\x66") . '?=',
+            ),
         );
     }
 

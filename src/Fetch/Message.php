@@ -577,6 +577,10 @@ class Message
         $to   = strtolower($to);
 
         if ($from === $to) {
+            if ($to === 'utf-8') {
+                return UTF8::fix($text);
+            }
+
             return $text;
         }
 
