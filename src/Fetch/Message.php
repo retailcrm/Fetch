@@ -597,6 +597,10 @@ class Message
             return $converted;
         }
 
+        if ($to === 'utf-8') {
+            return UTF8::fix($text);
+        }
+
         return null;
     }
 

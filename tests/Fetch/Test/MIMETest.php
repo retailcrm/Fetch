@@ -35,6 +35,10 @@ class MIMETest extends \PHPUnit_Framework_TestCase
                 '=?ISO-8859-2?B?dSB1bmRlcnN0YW5kIHRoZSBleGFtcGxlLg==?='
             ),
             array(
+                'ab11 ? ?????.jpg',
+                "\x61\x62\x31\x31\x20\x97\x20\x3f\x3f\x3f\x3f\x3f\x2e\x6a\x70\x67",
+            ),
+            array(
                 '?????? ?????.pdf',
                 '=?UTF-8?B?' .base64_encode("\xCF\xF0\xE8\xEC\xE5\xF0 \xEF\xEB\xE0\xED\xE0\x2E\x70\x64\x66") . '?=',
             ),
