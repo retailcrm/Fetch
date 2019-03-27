@@ -42,6 +42,12 @@ class MIMETest extends \PHPUnit_Framework_TestCase
                 '?????? ?????.pdf',
                 '=?UTF-8?B?' .base64_encode("\xCF\xF0\xE8\xEC\xE5\xF0 \xEF\xEB\xE0\xED\xE0\x2E\x70\x64\x66") . '?=',
             ),
+            array(
+                ' (ИСТРЕБИТЕЛЬ ЛЕТАЮЩИХ НАСЕКОМЫХ "БАРГУЗИН" КП ДИЛЕР - 2019г)',
+                ' =?ks_c_5601-1987?B?ICisqqyzrLSssqymrKKsqqy0rKasray+IKytrKastKyhrMCsu6yq?=' .
+                ' =?ks_c_5601-1987?B?rLcgrK+soayzrKasrKywrK6svay3ICKsoqyhrLKspKy1?=' .
+                ' =?ks_c_5601-1987?B?rKmsqqyvIiCsrKyxIKylrKqsraymrLIgLSAyMDE5rNQp?=',
+            ),
         );
     }
 

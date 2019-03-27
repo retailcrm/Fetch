@@ -191,6 +191,10 @@ class Message
      */
     public static $charsetFlag = '//TRANSLIT';
 
+    public static $charsetRenames = array(
+        'ks_c_5601-1987' => 'CP949',
+    );
+
     /**
      * These constants can be used to easily access available flags
      */
@@ -575,6 +579,10 @@ class Message
 
         $from = strtolower($from);
         $to   = strtolower($to);
+
+        if (isset(self::$charsetRenames[$from])) {
+            $from = self::$charsetRenames[$from];
+        }
 
         if ($from === $to) {
             if ($to === 'utf-8') {
