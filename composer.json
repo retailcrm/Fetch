@@ -18,9 +18,7 @@
   "require-dev": {
     "tedivm/dovecottesting": "1.2.3",
     "phpunit/phpunit": "4.2.*",
-    "fabpot/php-cs-fixer": "0.5.*",
-    "satooshi/php-coveralls": "dev-master"
-
+    "fabpot/php-cs-fixer": "0.5.*"
     },
   "autoload": {
     "psr-0": {"Fetch": "src/"}
