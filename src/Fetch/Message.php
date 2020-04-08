@@ -267,13 +267,13 @@ class Message
 
         $structure = $this->getStructure();
 
-        if (!isset($structure->parts)) {
-            // not multipart
-            $this->processStructure($structure);
-        } else {
+        if (isset($structure->parts)) {
             // multipart
             foreach ($structure->parts as $id => $part)
                 $this->processStructure($part, $id + 1);
+        } else {
+            // not multipart
+            $this->processStructure($structure);
         }
 
         return true;
@@ -515,11 +515,14 @@ class Message
     {
         $parameters = self::getParametersFromStructure($structure);
 
-        if ((!empty($parameters['name']) || !empty($parameters['filename']))
-            || (isset($structure->subtype) && strtolower($structure->subtype) == 'rfc822')
-        ) {
-            $attachment          = new Attachment($this, $structure, $partIdentifier);
+        if (!empty($parameters['name']) || !empty($parameters['filename'])) {
+            $attachment = new Attachment($this, $structure, $partIdentifier);
             $this->attachments[] = $attachment;
+        } else if (strtoupper($structure->subtype) === 'RFC822') {
+            $attachment = new Attachment($this, $structure, $partIdentifier);
+            $this->attachments[] = $attachment;
+            // do not process subparts (maybe it should be for all attachments?)
+            return;
         } elseif ($structure->type == 0 || $structure->type == 1) {
             $messageBody = isset($partIdentifier) ?
                 imap_fetchbody($this->imapStream, $this->uid, $partIdentifier, FT_UID | FT_PEEK)

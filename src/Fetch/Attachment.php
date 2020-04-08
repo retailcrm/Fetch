@@ -87,8 +87,32 @@ class Attachment
         $this->imapStream = $message->getImapBox()->getImapStream();
         $this->structure  = $structure;
 
-        if (isset($partIdentifier))
+        if (isset($partIdentifier)) {
             $this->partId = $partIdentifier;
+
+            // message in message
+            if ($this->structure->type === 2 && strtoupper($this->structure->subtype) === 'RFC822') {
+                $this->filename = 'message.eml';
+
+                $header = imap_fetchmime($this->imapStream, $this->messageId, $this->partId, FT_UID);
+
+                if (strtolower(Message::$charset) === 'utf-8') {
+                    try {
+                        $hObject = imap_rfc822_parse_headers($header);
+
+                        $subject = MIME::decode($hObject->subject, Message::$charset);
+                        $subject = preg_replace('#\s+#', ' ', $subject);
+                        $subject = preg_replace('#^(.{0,50})#u', '$1', $subject);
+
+                        if ($subject) {
+                            $this->filename = $subject . '.eml';
+                        }
+                    } catch (\Throwable $e) {
+
+                    }
+                }
+            }
+        }
 
         $parameters = Message::getParametersFromStructure($structure);
 
@@ -117,9 +141,18 @@ class Attachment
     public function getData()
     {
         if (!isset($this->data)) {
-            $messageBody = isset($this->partId) ?
-                imap_fetchbody($this->imapStream, $this->messageId, $this->partId, FT_UID)
-                : imap_body($this->imapStream, $this->messageId, FT_UID);
+            if ($this->partId) {
+                $messageBody = imap_fetchbody($this->imapStream, $this->messageId, $this->partId, FT_UID);
+
+                // message in message
+                if ($this->structure->type === 2 && strtoupper($this->structure->subtype) === 'RFC822') {
+                    $header = imap_fetchmime($this->imapStream, $this->messageId, $this->partId, FT_UID);
+
+                    return $this->data = $header . $messageBody;
+                }
+            } else {
+                $messageBody = imap_body($this->imapStream, $this->messageId, FT_UID);
+            }
 
             $messageBody = Message::decode($messageBody, $this->encoding);
             $this->data  = $messageBody;
