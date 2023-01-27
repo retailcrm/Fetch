@@ -18,7 +18,7 @@ final class UTF8
 
         $buf = '';
         for ($i = 0, $max = strlen($text); $i < $max; $i++) {
-            $c1 = $text{$i};
+            $c1 = $text[$i];
 
             if ($c1 <= "\x7F") { // single byte
                 $buf .= $c1;
