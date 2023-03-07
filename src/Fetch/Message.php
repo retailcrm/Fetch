@@ -600,9 +600,11 @@ class Message
 
         $converted = null;
         if (!$converted && function_exists('mb_convert_encoding')) {
+            // `@` оставлена для совместимости с php7, так как в этой
+            // версии выкидывается warning, который надо подавлять
             try {
-                if (mb_check_encoding($text, $from)) {
-                    $converted = mb_convert_encoding($text, $to, $from);
+                if (@mb_check_encoding($text, $from)) {
+                    $converted = @mb_convert_encoding($text, $to, $from);
                 }
             } catch (\ValueError $e) {
                 // noop
