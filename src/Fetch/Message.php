@@ -206,6 +206,18 @@ class Message
     const FLAG_DRAFT = 'draft';
 
     /**
+     * When there's no "from" header in the message, code
+     * ```
+     * $val = '<' . $address['address'] . '>';
+     * ```
+     * in `self::getAddresses()` causes error.
+     *
+     * To avoid this error, if "from" header not found
+     * then it will be stored as array with this value
+     */
+    const NO_FROM_HEADER_STUB_VALUE = 'unknown_sender';
+
+    /**
      * This constructor takes in the uid for the message and the Imap class representing the mailbox the
      * message should be opened from. This constructor should generally not be called directly, but rather retrieved
      * through the apprioriate Imap functions.
@@ -260,7 +272,14 @@ class Message
         if (isset($headers->sender))
             $this->sender = $this->processAddressObject($headers->sender);
 
-        $this->from    = isset($headers->from) ? $this->processAddressObject($headers->from) : array('');
+        $this->from    = isset($headers->from)
+            ? $this->processAddressObject($headers->from)
+            : array(
+                array(
+                    'address' => self::NO_FROM_HEADER_STUB_VALUE,
+                ),
+            )
+        ;
         $this->replyTo = isset($headers->reply_to) ? $this->processAddressObject($headers->reply_to) : $this->from;
 
         /* Finally load the structure itself */
