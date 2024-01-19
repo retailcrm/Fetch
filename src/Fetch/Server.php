@@ -103,8 +103,6 @@ class Server
     /**
      * This is the resource connection to the server. It is required by a number of imap based functions to specify how
      * to connect.
-     *
-     * @var resource
      */
     protected $imapStream;
 
@@ -249,8 +247,6 @@ class Server
 
     /**
      * This function gets the current saved imap resource and returns it.
-     *
-     * @return resource
      */
     public function getImapStream()
     {
