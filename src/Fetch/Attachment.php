@@ -121,9 +121,9 @@ class Attachment
         // name*1*=%D0%B8...
         // etc
         if (!empty($parameters['filename*'])) {
-            $this->setFileName($parameters['filename*']);
+            $this->setFileName(urldecode($parameters['filename*']));
         } elseif (!empty($parameters['name*'])) {
-            $this->setFileName($parameters['name*']);
+            $this->setFileName(urldecode($parameters['name*']));
         }
 
         if (!empty($parameters['filename'])) {
