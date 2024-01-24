@@ -534,6 +534,17 @@ class Message
     {
         $parameters = self::getParametersFromStructure($structure);
 
+        // quick fix for Content-Disposition extended notation
+        // name*0*=UTF-8''%D0%A...
+        // name*1*=%D0%B8...
+        // etc
+        if (empty($parameters['name']) && !empty($parameters['name*'])) {
+            $parameters['name'] = $parameters['name*'];
+        }
+        if (empty($parameters['filename']) && !empty($parameters['filename*'])) {
+            $parameters['filename'] = $parameters['filename*'];
+        }
+
         if (!empty($parameters['name']) || !empty($parameters['filename'])) {
             $attachment = new Attachment($this, $structure, $partIdentifier);
             $this->attachments[] = $attachment;
