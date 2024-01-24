@@ -116,6 +116,16 @@ class Attachment
 
         $parameters = Message::getParametersFromStructure($structure);
 
+        // quick fix for Content-Disposition extended notation
+        // name*0*=UTF-8''%D0%A...
+        // name*1*=%D0%B8...
+        // etc
+        if (!empty($parameters['filename*'])) {
+            $this->setFileName($parameters['filename*']);
+        } elseif (!empty($parameters['name*'])) {
+            $this->setFileName($parameters['name*']);
+        }
+
         if (!empty($parameters['filename'])) {
             $this->setFileName($parameters['filename']);
         } elseif (!empty($parameters['name'])) {
