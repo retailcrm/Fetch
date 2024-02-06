@@ -100,12 +100,14 @@ class Attachment
                     try {
                         $hObject = imap_rfc822_parse_headers($header);
 
-                        $subject = MIME::decode($hObject->subject, Message::$charset);
-                        $subject = preg_replace('#\s+#', ' ', $subject);
-                        $subject = preg_replace('#^(.{0,50})#u', '$1', $subject);
+                        if (property_exists($hObject, 'subject')) {
+                            $subject = MIME::decode($hObject->subject, Message::$charset);
+                            $subject = preg_replace('#\s+#', ' ', $subject);
+                            $subject = preg_replace('#^(.{0,50})#u', '$1', $subject);
 
-                        if ($subject) {
-                            $this->filename = $subject . '.eml';
+                            if ($subject) {
+                                $this->filename = $subject . '.eml';
+                            }
                         }
                     } catch (\Throwable $e) {
 
