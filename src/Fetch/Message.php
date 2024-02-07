@@ -249,9 +249,15 @@ class Message
 
             return false;
 
-        $this->subject = MIME::decode($messageOverview->subject, self::$charset);
-        $this->date    = strtotime($messageOverview->date);
-        $this->size    = $messageOverview->size;
+        if (property_exists($messageOverview, 'subject')) {
+            $this->subject = MIME::decode($messageOverview->subject, self::$charset);
+        }
+
+        if (property_exists($messageOverview, 'date')) {
+            $this->date = strtotime($messageOverview->date);
+        }
+
+        $this->size = $messageOverview->size;
 
         foreach (self::$flagTypes as $flag)
             $this->status[$flag] = ($messageOverview->$flag == 1);
@@ -381,7 +387,7 @@ class Message
     public function getStructure($forceReload = false)
     {
         if ($forceReload || !isset($this->structure)) {
-            $this->structure = imap_fetchstructure($this->imapStream, $this->uid, FT_UID);
+            $this->structure = @imap_fetchstructure($this->imapStream, $this->uid, FT_UID);
         }
 
         return $this->structure;
@@ -532,6 +538,10 @@ class Message
      */
     protected function processStructure($structure, $partIdentifier = null)
     {
+        if (!$structure) {
+            return;
+        }
+
         $parameters = self::getParametersFromStructure($structure);
 
         // quick fix for Content-Disposition extended notation
