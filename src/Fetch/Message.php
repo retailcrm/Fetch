@@ -253,7 +253,7 @@ class Message
             $this->subject = MIME::decode($messageOverview->subject, self::$charset);
         }
 
-        if (property_exists($messageOverview, 'date')) {
+        if (property_exists($messageOverview, 'date') && null !== $messageOverview->date) {
             $this->date = strtotime($messageOverview->date);
         }
 
